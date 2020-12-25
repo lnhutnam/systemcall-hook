@@ -17,7 +17,9 @@ Syscall này sẽ nhận vào pid, ghi process name vào trong biến buff với
 Yêu cầu 2: Hook vào 2 syscall dưới đây:
 --------
 
-syscall open => ghi vào dmesg tên tiến trình mở file và tên file được mở syscall write => ghi vào dmesg tên tiến trình, tên file bị ghi và số byte được ghi
+syscall open => ghi vào dmesg tên tiến trình mở file và tên file được mở 
+
+syscall write => ghi vào dmesg tên tiến trình, tên file bị ghi và số byte được ghi
 
 Link tham khảo https://uwnthesis.wordpress.com/2016/12/26/basics-of-making-a-rootkit-from- syscall-to-hook
 
@@ -50,3 +52,8 @@ License
 -------
 
 The project is licensed under the MIT license.
+
+Authors
+-------
+
+Someone
