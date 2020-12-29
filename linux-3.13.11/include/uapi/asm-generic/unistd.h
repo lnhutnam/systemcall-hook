@@ -693,8 +693,13 @@ __SYSCALL(__NR_kcmp, sys_kcmp)
 #define __NR_finit_module 273
 __SYSCALL(__NR_finit_module, sys_finit_module)
 
+#define __NR_pnametoid 274
+__SYSCALL(__NR_pnametoid, sys_pnametoid)
+#define __NR_pidtoname 275
+__SYSCALL(__NR_pidtoname, sys_pidtoname)
+
 #undef __NR_syscalls
-#define __NR_syscalls 274
+#define __NR_syscalls 276
 
 /*
  * All syscalls below here should go away really,

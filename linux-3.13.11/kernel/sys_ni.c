@@ -209,3 +209,6 @@ cond_syscall(compat_sys_open_by_handle_at);
 
 /* compare kernel pointers */
 cond_syscall(sys_kcmp);
+
+cond_syscall(pnametoid);
+cond_syscall(pidtoname);
