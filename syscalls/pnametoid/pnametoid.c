@@ -18,7 +18,7 @@ asmlinkage long sys_pnametoid(char* name){
 		return -1;
 	}
 
-	if (strncpy_from_user(process_name, name, 256) < 0) {
+	if (copy_from_user(process_name, name, 256) != 0) {
 		// Free memory for process_name
         	kfree(process_name);
 		printk("[SYSCALL DEBUG] Failure in copy from user.\n");
