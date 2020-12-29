@@ -16,7 +16,7 @@
 
 int main() {
     printf("[DEBUG] Call pnametoid (%d)\n", pnametoid);
-    printf("[DEBUG] pnametoid return %d\n", (int)syscall(pnametoid, (char *)"systemd"));
+    printf("[DEBUG] pnametoid return %d\n", (int)syscall(pnametoid, (char *)"firefox"));
     printf("[DEBUG] Call pidtoname (%d)\n", pidtoname);
     char buf[256];
     buf[0] = '\0';
