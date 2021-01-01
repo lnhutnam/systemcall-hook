@@ -20,8 +20,9 @@ __attribute__((section("__versions"))) = {
 	{ 0x8d205291, __VMLINUX_SYMBOL_STR(module_layout) },
 	{ 0x15568631, __VMLINUX_SYMBOL_STR(lookup_address) },
 	{ 0xe007de41, __VMLINUX_SYMBOL_STR(kallsyms_lookup_name) },
-	{ 0x37a0cba, __VMLINUX_SYMBOL_STR(kfree) },
 	{ 0x50eedeb8, __VMLINUX_SYMBOL_STR(printk) },
+	{ 0x37a0cba, __VMLINUX_SYMBOL_STR(kfree) },
+	{ 0xe2d5255a, __VMLINUX_SYMBOL_STR(strcmp) },
 	{ 0x42c4b990, __VMLINUX_SYMBOL_STR(d_path) },
 	{ 0xcc9a47b5, __VMLINUX_SYMBOL_STR(current_task) },
 	{ 0x4f6b400b, __VMLINUX_SYMBOL_STR(_copy_from_user) },
@@ -36,4 +37,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "C662256448C59329FD30062");
+MODULE_INFO(srcversion, "9867563C7FA8C9AC372EF1F");

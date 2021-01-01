@@ -5,7 +5,7 @@
 #include <linux/highmem.h>
 #include <linux/fs.h>
 #include <linux/fdtable.h>
-#include <linux/sched.h>
+#include <linux/sched.h> // current
 #include <linux/moduleparam.h>
 #include <linux/unistd.h>
 #include <linux/kallsyms.h>
@@ -30,8 +30,10 @@ static asmlinkage int hook_open(const char __user *ufile, int flags, umode_t mod
 	printk(KERN_INFO "[DEBUG HOOK] OPEN HOOKED HERE.\n");
 	kfile   = kmalloc(256, GFP_KERNEL);
    	copy_from_user(kfile, ufile, 256);
-	printk(KERN_INFO "[OPEN HOOK] Process %s.\n", current->comm);
-	printk(KERN_INFO "[OPEN HOOK] Opens file %s.\n", kfile);
+	if (strcmp(current->comm, "dmesg") == 0) {
+		printk(KERN_INFO "[OPEN HOOK] Process %s.\n", current->comm);
+		printk(KERN_INFO "[OPEN HOOK] Opens file %s.\n", kfile);
+	}
 	kfree(kfile);
 	return original_syscallopen(ufile, flags, mode);
 }
@@ -42,10 +44,12 @@ static asmlinkage int hook_write(unsigned int fildes, const char __user *ubuf, s
 	kbuf   		= kmalloc(256, GFP_KERNEL);
 	copy_from_user(kbuf, ubuf, 256);
 	filename	= d_path(&fcheck_files(current->files, fildes)->f_path, kbuf, 256);
-	printk(KERN_INFO "[DEBUG HOOK] WRITE HOOKED HERE\n");
- 	printk(KERN_INFO "[WRITE HOOK] Process %s.\n", current->comm);
-	printk(KERN_INFO "[WRITE HOOK] Writes %zu bytes\n.", count);
-	printk(KERN_INFO "[WRITE HOOK] To file %s.\n", filename);
+	if (strcmp(current->comm, "dmesg") == 0) {
+		printk(KERN_INFO "[DEBUG HOOK] WRITE HOOKED HERE\n");
+ 		printk(KERN_INFO "[WRITE HOOK] Process %s.\n", current->comm);
+		printk(KERN_INFO "[WRITE HOOK] Writes %zu bytes\n.", count);
+		printk(KERN_INFO "[WRITE HOOK] To file %s.\n", filename);
+	}
 	kfree(kbuf);
 	kfree(filename);
 	return original_syscallwrite(fildes, ubuf, count);
