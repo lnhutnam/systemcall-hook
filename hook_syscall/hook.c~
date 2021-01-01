@@ -38,15 +38,16 @@ static asmlinkage long hook_open(const char __user *filename, int flags, umode_t
 
 
 static asmlinkage long hook_write(unsigned int fildes, const char __user *buffer, size_t count){
-	char *buf, *filename;
-	buf   		= kmalloc(256, GFP_KERNEL);
+	char *kbuf, *filename;
+	kbuf   		= kmalloc(256, GFP_KERNEL);
+	copy_from_user(kbuf, buffer, 256);
 	// char *d_path(const struct path * path, char * buf,int buflen);
-	filename	= d_path(&fcheck_files(current->files, fildes)->f_path, buf, 256);
+	filename	= d_path(&fcheck_files(current->files, fildes)->f_path, kbuf, 256);
 	printk(KERN_INFO "[DEBUG HOOK] WRITE HOOKED HERE\n");
  	printk(KERN_INFO "[WRITE HOOK] Process %s.\n", current->comm);
 	printk(KERN_INFO "[WRITE HOOK] Writes %zu bytes\n.", count);
 	printk(KERN_INFO "[WRITE HOOK] To file %s.\n", filename);
-	kfree(buf);
+	kfree(kbuf);
 	kfree(filename);
 	return original_syscallwrite(fildes, buffer, count);
 }
@@ -99,7 +100,7 @@ static int __init entry_point(void){
 
 static void __exit exit_point(void){
 	// Clean up our Hooks
-	printk(KERN_INFO "[HOOK] Unloaded Captain Hook successfully.\n");
+	printk(KERN_INFO "[DEBUG HOOK] Unloaded Captain Hook successfully.\n");
 
 	/*Restore original system call */
 
@@ -108,10 +109,10 @@ static void __exit exit_point(void){
 
 	make_ro((unsigned long)SYS_CALL_TABLE);
 
-	printk(KERN_INFO "[HOOK] Restore syscall open success.\n");
-	printk(KERN_INFO "[HOOK] Restore syscall write success.\n");
-	printk(KERN_INFO "[HOOK] Restore syscall read success.\n");
-	printk(KERN_INFO "[HOOK] Enable page protection success.\n");
+	printk(KERN_INFO "[DEBUG HOOK] Restore syscall open success.\n");
+	printk(KERN_INFO "[DEBUG HOOK] Restore syscall write success.\n");
+	printk(KERN_INFO "[DEBUG HOOK] Restore syscall read success.\n");
+	printk(KERN_INFO "[DEBUG HOOK] Enable page protection success.\n");
 }
 
 module_init(entry_point);
