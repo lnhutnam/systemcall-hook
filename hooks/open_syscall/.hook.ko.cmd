@@ -1,0 +1,1 @@
+cmd_/home/nhutnam/Desktop/systemcall-hook/hooks/open_syscall/hook.ko := ld -r -m elf_i386 -T /usr/src/linux-3.13.11/scripts/module-common.lds --build-id  -o /home/nhutnam/Desktop/systemcall-hook/hooks/open_syscall/hook.ko /home/nhutnam/Desktop/systemcall-hook/hooks/open_syscall/hook.o /home/nhutnam/Desktop/systemcall-hook/hooks/open_syscall/hook.mod.o

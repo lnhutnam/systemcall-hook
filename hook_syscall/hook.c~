@@ -23,6 +23,7 @@ MODULE_LICENSE("GPL");
 static void **SYS_CALL_TABLE;		
 
 static asmlinkage int (*original_syscallopen) (const char __user *, int, umode_t);
+static asmlinkage int (*original_syscallread)(unsigned int, void __user*, size_t);
 static asmlinkage int (*original_syscallwrite) (unsigned int, const char __user *, size_t);
 
 static asmlinkage int hook_open(const char __user *ufile, int flags, umode_t mode){
@@ -33,9 +34,9 @@ static asmlinkage int hook_open(const char __user *ufile, int flags, umode_t mod
 	if (strcmp(current->comm, "dmesg") == 0) {
 		printk(KERN_INFO "[OPEN HOOK] Process %s.\n", current->comm);
 		printk(KERN_INFO "[OPEN HOOK] Opens file %s.\n", kfile);
-		kfree(kfile);
-		return original_syscallopen(ufile, flags, mode);
 	}
+	kfree(kfile);
+	return original_syscallopen(ufile, flags, mode);
 }
 
 
@@ -49,10 +50,25 @@ static asmlinkage int hook_write(unsigned int fildes, const char __user *ubuf, s
  		printk(KERN_INFO "[WRITE HOOK] Process %s.\n", current->comm);
 		printk(KERN_INFO "[WRITE HOOK] Writes %zu bytes\n.", count);
 		printk(KERN_INFO "[WRITE HOOK] To file %s.\n", filename);
-		kfree(kbuf);
-		kfree(filename);
-		return original_syscallwrite(fildes, ubuf, count);
 	}
+	kfree(kbuf);
+	return original_syscallwrite(fildes, ubuf, count);
+}
+
+
+static asmlinkage int hook_read(unsigned int fildes, void __user* ubuf, size_t count) {
+	char *kbuf, *filename;
+	kbuf   		= kmalloc(256, GFP_KERNEL);
+	copy_from_user(kbuf, ubuf, 256);
+	filename	= d_path(&fcheck_files(current->files, fildes)->f_path, kbuf, 256);
+	if (strcmp(current->comm, "dmesg") == 0) {
+		printk(KERN_INFO "[DEBUG HOOK] WRITE HOOKED HERE\n");
+ 		printk(KERN_INFO "[WRITE HOOK] Process %s.\n", current->comm);
+		printk(KERN_INFO "[WRITE HOOK] Writes %zu bytes\n.", count);
+		printk(KERN_INFO "[WRITE HOOK] To file %s.\n", filename);
+	}
+	kfree(kbuf);
+	return (*original_read)(fd, buf, count);
 }
 
 
